@@ -2417,11 +2417,19 @@ public abstract class Entity extends Location implements Metadatable {
         }
 
         if (this.keepMovement) {
+            EntityMoveEvent event = new EntityMoveEvent(this, dx, dy, dz);
+            this.level.getServer().getPluginManager().callEvent(event);
+            if (event.isCancelled()) return false;
+
             this.boundingBox.offset(dx, dy, dz);
             this.setPosition(this.temporalVector.setComponents((this.boundingBox.getMinX() + this.boundingBox.getMaxX()) / 2, this.boundingBox.getMinY(), (this.boundingBox.getMinZ() + this.boundingBox.getMaxZ()) / 2));
             this.onGround = this.isPlayer;
             return true;
         } else {
+            EntityMoveEvent event = new EntityMoveEvent(this, dx, dy, dz);
+            this.level.getServer().getPluginManager().callEvent(event);
+            if (event.isCancelled()) return false;
+
             this.ySize *= STEP_CLIP_MULTIPLIER;
 
             double movX = dx;
